@@ -1,8 +1,7 @@
-function  [a,beta] = matrizfazer(p,X,Y)
-      close all
-      n = size (X,1);
-     % p = size (X,2);
+%matriz adaptada para 1D data
 
+function  [erro,beta] = matrizfazer(p,X,Y)
+      n = size (X,1);
       a = ones (n,p+1);
       
       for (i=2:p+1)
@@ -33,7 +32,9 @@ function  [a,beta] = matrizfazer(p,X,Y)
         for i=1:n
              erro = erro + ((Y(i) - funcaomagica(beta,X(i)))^2);
         end
+        
         erro
+        beta
        
 end
 

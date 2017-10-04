@@ -1,10 +1,48 @@
 %%ramiro e Miragaia
 
 %%
-%Pergunta 1;
+%Pergunta 3;
 clear 
 close all
 load data1
-%3.a)è pedido que a ordem 1 logo p =1
-matrizfazer(1,x,y)
-%3.b)
+%a)e b) ,é pedido que a ordem 1 logo p =1
+p=1;
+[erro,Beta] = matrizfazer(p,x,y);
+
+%os valores dos coeficientes
+Beta
+
+%o valore do erro
+erro
+%%
+%pergunta 4
+%a)e b) ,é pedido que a ordem 1 logo p =2
+load data2
+p=2;
+[erro,Beta] = matrizfazer(p,x,y);
+
+%os valores dos coeficientes
+Beta
+
+%o valore do erro
+erro
+
+%%
+%pergunta 5
+%a)e b) ,é pedido que a ordem 1 logo p =2
+load data2a
+p=2;
+[erro,Beta] = matrizfazer(p,x,y);
+
+%os valores dos coeficientes
+Beta
+
+%o valore do erro
+erro
+
+
+%%
+% Regurization
+%
+
+
