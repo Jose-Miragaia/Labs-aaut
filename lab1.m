@@ -44,5 +44,8 @@ erro
 %%
 % Regurization
 %
+load data3
+[B,FitInfo] = lasso(X,Y);
+lassoPlot(B,FitInfo,'PlotType','Lambda','XScale','log');
 
 

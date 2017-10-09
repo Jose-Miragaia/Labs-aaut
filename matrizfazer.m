@@ -32,9 +32,6 @@ function  [erro,beta] = matrizfazer(p,X,Y)
         for i=1:n
              erro = erro + ((Y(i) - funcaomagica(beta,X(i)))^2);
         end
-        
-        erro
-        beta
        
 end
 
