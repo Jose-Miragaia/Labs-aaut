@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">%%ramiro e Miragaia</span>
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#8">ridge</a></li></ul></div><pre class="codeinput"><span class="comment">%%ramiro e Miragaia</span>
 </pre><pre class="codeinput"><span class="comment">%Pergunta 3;</span>
 clear
 close <span class="string">all</span>
@@ -151,7 +151,12 @@ erro =
 <span class="keyword">end</span>
 
 [B,FitInfo] = lasso(X,Y);
+
 lassoPlot(B,FitInfo,<span class="string">'PlotType'</span>,<span class="string">'Lambda'</span>,<span class="string">'XScale'</span>,<span class="string">'log'</span>);
+hold <span class="string">on</span>
+hline = refline([0 1.425]);
+hline = refline([0 2.9385]);
+hline = refline([0 0.064508]);
 </pre><img vspace="5" hspace="5" src="lab1_04.png" alt=""> <pre class="codeinput">[B,FitInfo] = lasso(X,Y,<span class="string">'CV'</span>,50);
 lassoPlot(B,FitInfo,<span class="string">'PlotType'</span>,<span class="string">'CV'</span>);
 FitInfo.Lambda1SE
@@ -198,8 +203,10 @@ hello = sum(Y)/50;
 Y = Y - hello;
 
 title(<span class="string">'Lasso com o labda escolhido'</span>);
-scatter(eixo,Y);
-scatter(eixo,Y_2,<span class="string">'r'</span>,<span class="string">'X'</span>);
+plot(eixo,Y);
+plot(eixo,Y_2);
+xlabel(<span class="string">'index'</span>);
+ylabel(<span class="string">'Y,Y_2'</span>);
 legend(<span class="string">'training_data'</span>,<span class="string">'results with achieved beta'</span>);
 
 erro =0;
@@ -210,15 +217,12 @@ erro =0;
 erro
 
 
-<span class="comment">%caso regular em que o lambda &eacute; 0</span>
+<span class="comment">%caso regular em que o lambda &eacute; quase 0</span>
 
 beta_1 =B(1,1);
 <span class="comment">%as seen in the graph b2 not cool man</span>
 beta_2 =B(2,1);
 beta_3 =B(3,1);
-
-
-
 
 BETA = [beta_1;beta_2;beta_3]
 
@@ -226,10 +230,12 @@ Y_LS=  X*BETA;
 
 figure
 hold <span class="string">on</span>
-title(<span class="string">'Lasso com o labda=0 (LS)'</span>);
+title(<span class="string">'Lasso com o labda = 0 (LS)'</span>);
 
-scatter(eixo,Y);
-scatter(eixo,Y_LS,<span class="string">'r'</span>,<span class="string">'X'</span>);
+plot(eixo,Y);
+plot(eixo,Y_LS);
+xlabel(<span class="string">'index'</span>);
+ylabel(<span class="string">'Y,Y_LS'</span>);
 legend(<span class="string">'training_data'</span>,<span class="string">'results with LS method'</span>);
 
 erro =0;
@@ -237,57 +243,6 @@ erro =0;
              erro = erro + (Y(i) - Y_LS(i))^2;
 <span class="keyword">end</span>
 erro
-
-<span class="comment">% %% ridge</span>
-<span class="comment">%</span>
-Beta_ridge = inv(X'*X - eye(3)*FitInfo.Lambda1SE) *X'* Y
-
-Y_Lambda=  X*Beta_ridge;
-figure
-hold <span class="string">on</span>
-title(<span class="string">'Ridge com o labda escolhido no Lasso'</span>);
-
-scatter(eixo,Y);
-scatter(eixo,Y_Lambda,<span class="string">'r'</span>,<span class="string">'X'</span>);
-legend(<span class="string">'training_data'</span>,<span class="string">'results with achieved beta'</span>);
-erro =0;
-<span class="keyword">for</span> i=1:50
-             erro = erro + (Y(i) - Y_Lambda(i))^2;
-<span class="keyword">end</span>
-erro
-
-BETA_R = ridge(Y,X,3)
-Y_Ridge=  X*BETA_R;
-figure
-hold <span class="string">on</span>
-title(<span class="string">'Ridge com o beta escolhido pelo fun&ccedil;&atilde;o ridge()'</span>);
-scatter(eixo,Y);
-scatter(eixo,Y_Ridge,<span class="string">'r'</span>,<span class="string">'X'</span>);
-legend(<span class="string">'training_data'</span>,<span class="string">'results with achieved beta through ridge'</span>);
-
-erro =0;
-<span class="keyword">for</span> i=1:50
-             erro = erro + (Y(i) - Y_Ridge(i))^2;
-<span class="keyword">end</span>
-erro
-
-<span class="comment">% Y_R = X*Beta_ridge;</span>
-<span class="comment">%</span>
-<span class="comment">% figure</span>
-<span class="comment">% hold on</span>
-<span class="comment">% scatter(eixo,Y);</span>
-<span class="comment">% scatter(eixo,Y_R,'r','X');</span>
-<span class="comment">%</span>
-<span class="comment">% erro =0;</span>
-<span class="comment">% for i=1:50</span>
-<span class="comment">%              erro = erro + (Y(i) - Y_R(i))^2;</span>
-<span class="comment">% end</span>
-<span class="comment">% % a maioria dos resultados, acho que todos n&atilde;o mudavam com tirar a medio dos X</span>
-<span class="comment">% erro</span>
-<span class="comment">% %%</span>
-<span class="comment">% o erro neste caso vai ser mais elevado pois o lasso elimina totalmente o</span>
-<span class="comment">% b2 logo vai fazer com que o vai permanecer que o factor linear aumentando</span>
-<span class="comment">% o erro pois o lasso &eacute; mais severo com os betas menores do que o ridge</span>
 </pre><pre class="codeoutput">
 erro =
 
@@ -305,31 +260,56 @@ erro =
 
    14.9820
 
+</pre><img vspace="5" hspace="5" src="lab1_06.png" alt=""> <img vspace="5" hspace="5" src="lab1_07.png" alt=""> <h2>ridge<a name="8"></a></h2><p>Beta_ridge = inv(X'*X - eye(3)*FitInfo.Lambda1SE) <b>X'</b> Y;</p><p>Y_Lambda=  X*Beta_ridge; figure hold on title('Ridge com o labda escolhido no Lasso');</p><p>plot(eixo,Y); plot(eixo,Y_Lambda); legend('training_data','results with achieved beta'); erro =0; for i=1:50              erro = erro + (Y(i) - Y_Lambda(i))^2; end erro</p><pre class="codeinput">BETA_R = ridge(Y,X,FitInfo.Lambda1SE)
+Y_Ridge=  X*BETA_R;
 
-Beta_ridge =
+figure
+hold <span class="string">on</span>
+title(<span class="string">'Ridge com o beta escolhido pelo fun&ccedil;&atilde;o ridge()'</span>);
+plot(eixo,Y);
+plot(eixo,Y_Ridge);
 
-    2.9493
-    0.0655
-    1.4303
+xlabel(<span class="string">'index'</span>);
+ylabel(<span class="string">'Y,Y_Ridge'</span>);
+legend(<span class="string">'training_data'</span>,<span class="string">'results with achieved beta through ridge'</span>);
 
+erro =0;
 
-erro =
-
-   14.9887
-
-
+<span class="keyword">for</span> i=1:50
+             erro = erro + (Y(i) - Y_Ridge(i))^2;
+<span class="keyword">end</span>
+erro
+</pre><pre class="codeoutput">
 BETA_R =
 
-    2.8415
-    0.0550
-    1.4493
+    3.0129
+    0.0659
+    1.5447
 
 
 erro =
 
-   15.5203
+   16.0212
 
-</pre><img vspace="5" hspace="5" src="lab1_06.png" alt=""> <img vspace="5" hspace="5" src="lab1_07.png" alt=""> <img vspace="5" hspace="5" src="lab1_08.png" alt=""> <img vspace="5" hspace="5" src="lab1_09.png" alt=""> <p>load data3 % for j=1:3      med = sum(X(:,j));      for i=1:50          X(i,j)= X(i,j) - med;      end end B = ridge(X,Y,3); rigdePlot(B,FitInfo,'PlotType','Lambda','XScale','log');</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+</pre><img vspace="5" hspace="5" src="lab1_08.png" alt=""> <p>o erro neste caso vai ser mais elevado pois o lasso elimina totalmente o b2 logo vai fazer com que o vai permanecer que o factor linear aumentando o erro pois o lasso &eacute; mais severo com os betas menores do que o ridge</p><p>%% load data3 %</p><p>%% for j=1:3      med = sum(X(:,j));      for i=1:50          X(i,j)= X(i,j) - med;      end end</p><p>B = ridge(Y,D,FitInfo.Lambda1SE); figure plot(k,B,'LineWidth',2) ylim([-100 100]) grid on xlabel('Ridge Parameter') ylabel('Standardized Coefficient') title('{\bf Ridge Trace}') legend('x1','x2','x3','x1x2','x1x3','x2x3')</p><pre class="codeinput">figure (3)
+xlabel(<span class="string">'x'</span>);
+ylabel(<span class="string">'Y,Y-LS'</span>);
+title(<span class="string">'Cosine fit with outlier'</span>);
+legend(<span class="string">'Training Data'</span>,<span class="string">'Fit'</span>);
+
+figure (1)
+xlabel(<span class="string">'x'</span>);
+ylabel(<span class="string">'Y,Y-LS'</span>);
+title(<span class="string">'linear fit'</span>);
+legend(<span class="string">'Training Data'</span>,<span class="string">'Fit'</span>);
+
+
+figure (2)
+xlabel(<span class="string">'x'</span>);
+ylabel(<span class="string">'Y,Y-LS'</span>);
+title(<span class="string">'Cosine fit'</span>);
+legend(<span class="string">'Training Data'</span>,<span class="string">'Fit'</span>);
+</pre><img vspace="5" hspace="5" src="lab1_09.png" alt=""> <img vspace="5" hspace="5" src="lab1_10.png" alt=""> <img vspace="5" hspace="5" src="lab1_11.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %%ramiro e Miragaia
 
@@ -393,7 +373,13 @@ for j=1:3
 end
 
 [B,FitInfo] = lasso(X,Y);
+
 lassoPlot(B,FitInfo,'PlotType','Lambda','XScale','log');
+hold on 
+hline = refline([0 1.425]);
+hline = refline([0 2.9385]);
+hline = refline([0 0.064508]);
+
 %%
 
 [B,FitInfo] = lasso(X,Y,'CV',50);
@@ -426,8 +412,10 @@ hello = sum(Y)/50;
 Y = Y - hello;
 
 title('Lasso com o labda escolhido');
-scatter(eixo,Y);
-scatter(eixo,Y_2,'r','X');
+plot(eixo,Y);
+plot(eixo,Y_2);
+xlabel('index');
+ylabel('Y,Y_2');
 legend('training_data','results with achieved beta');
 
 erro =0;
@@ -438,15 +426,12 @@ end
 erro
 
 
-%caso regular em que o lambda é 0
+%caso regular em que o lambda é quase 0
 
 beta_1 =B(1,1);
 %as seen in the graph b2 not cool man
 beta_2 =B(2,1);
 beta_3 =B(3,1);
-
-
-
 
 BETA = [beta_1;beta_2;beta_3]
 
@@ -454,10 +439,12 @@ Y_LS=  X*BETA;
 
 figure
 hold on
-title('Lasso com o labda=0 (LS)');
+title('Lasso com o labda = 0 (LS)');
 
-scatter(eixo,Y);
-scatter(eixo,Y_LS,'r','X');
+plot(eixo,Y);
+plot(eixo,Y_LS);
+xlabel('index');
+ylabel('Y,Y_LS');
 legend('training_data','results with LS method');
 
 erro =0;
@@ -466,74 +453,96 @@ for i=1:50
 end
 erro
 
-% %% ridge
+%% ridge
 % 
-Beta_ridge = inv(X'*X - eye(3)*FitInfo.Lambda1SE) *X'* Y
+% Beta_ridge = inv(X'*X - eye(3)*FitInfo.Lambda1SE) *X'* Y;
+% 
+% Y_Lambda=  X*Beta_ridge;
+% figure
+% hold on
+% title('Ridge com o labda escolhido no Lasso');
+% 
+% plot(eixo,Y);
+% plot(eixo,Y_Lambda);
+% legend('training_data','results with achieved beta');
+% erro =0;
+% for i=1:50
+%              erro = erro + (Y(i) - Y_Lambda(i))^2;
+% end
+% erro
 
-Y_Lambda=  X*Beta_ridge;
-figure
-hold on
-title('Ridge com o labda escolhido no Lasso');
-
-scatter(eixo,Y);
-scatter(eixo,Y_Lambda,'r','X');
-legend('training_data','results with achieved beta');
-erro =0;
-for i=1:50
-             erro = erro + (Y(i) - Y_Lambda(i))^2;
-end
-erro
-
-BETA_R = ridge(Y,X,3)
+BETA_R = ridge(Y,X,FitInfo.Lambda1SE)
 Y_Ridge=  X*BETA_R;
+
 figure
 hold on
 title('Ridge com o beta escolhido pelo função ridge()');
-scatter(eixo,Y);
-scatter(eixo,Y_Ridge,'r','X');
+plot(eixo,Y);
+plot(eixo,Y_Ridge);
+
+xlabel('index');
+ylabel('Y,Y_Ridge');
 legend('training_data','results with achieved beta through ridge');
 
 erro =0;
+
 for i=1:50
              erro = erro + (Y(i) - Y_Ridge(i))^2;
 end
 erro
 
-% Y_R = X*Beta_ridge;
-% 
-% figure
-% hold on
-% scatter(eixo,Y);
-% scatter(eixo,Y_R,'r','X');
-% 
-% erro =0;
-% for i=1:50
-%              erro = erro + (Y(i) - Y_R(i))^2;
-% end
-% % a maioria dos resultados, acho que todos não mudavam com tirar a medio dos X
-% erro
-% %%
+%%
 % o erro neste caso vai ser mais elevado pois o lasso elimina totalmente o
 % b2 logo vai fazer com que o vai permanecer que o factor linear aumentando
 % o erro pois o lasso é mais severo com os betas menores do que o ridge
 
  
-
 %%
+% %%
 % load data3
 % % 
+% 
+% %%
 % for j=1:3
 %      med = sum(X(:,j));
 %      for i=1:50
 %          X(i,j)= X(i,j) - med;
 %      end
 % end
-% B = ridge(X,Y,3);
-% rigdePlot(B,FitInfo,'PlotType','Lambda','XScale','log');
+
+%%
+% B = ridge(Y,D,FitInfo.Lambda1SE);
+% figure
+% plot(k,B,'LineWidth',2)
+% ylim([-100 100])
+% grid on
+% xlabel('Ridge Parameter')
+% ylabel('Standardized Coefficient')
+% title('{\bf Ridge Trace}')
+% legend('x1','x2','x3','x1x2','x1x3','x2x3')
+% 
+% 
+% 
+% 
+
+figure (3)
+xlabel('x');
+ylabel('Y,Y-LS');
+title('Cosine fit with outlier');
+legend('Training Data','Fit');
+
+figure (1)
+xlabel('x');
+ylabel('Y,Y-LS');
+title('linear fit');
+legend('Training Data','Fit');
 
 
-
-
+figure (2)
+xlabel('x');
+ylabel('Y,Y-LS');
+title('Cosine fit');
+legend('Training Data','Fit');
 
 ##### SOURCE END #####
 --></body></html>
