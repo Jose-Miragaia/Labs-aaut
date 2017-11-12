@@ -1,0 +1,434 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>lab</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-11-12"><meta name="DC.source" content="lab.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">script pedido</a></li></ul></div><pre class="codeinput"><span class="comment">% o naive bayes classifier &eacute; um classsificador baseado em probabilidades que, assume que todas as features s&atilde;o independetes</span>
+<span class="comment">% entre si, sendo possivel</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+<span class="comment">% &eacute; altamente escal&aacute;vel send que o n&uacute;mero de parametros de teste &eacute; linear com o n&uacute;mero de feature necessarias</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+
+
+
+
+
+
+
+
+close <span class="string">all</span>
+clear
+
+load <span class="string">data1</span>;
+
+k=1;
+j=1;
+m=1;
+
+<span class="keyword">for</span> i=1:length(ytest)
+    <span class="keyword">switch</span> ytest(i);
+        <span class="keyword">case</span> 1
+            X_1(:,k) =  xtest(:,i);
+            k=k+1;
+        <span class="keyword">case</span> 2
+            X_2(:,j) =  xtest(:,i);
+            j=j+1;
+        <span class="keyword">case</span> 3
+            X_3 (:,m)=  xtest(:,i);
+            m=m+1;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+k=1;
+j=1;
+m=1;
+
+
+<span class="keyword">for</span> i=1:length(ytrain)
+    <span class="keyword">switch</span> ytrain(i);
+        <span class="keyword">case</span> 1
+            X_1r(:,k) =  xtrain(:,i);
+            k=k+1;
+        <span class="keyword">case</span> 2
+            X_2r(:,j) =  xtrain(:,i);
+            j=j+1;
+        <span class="keyword">case</span> 3
+            X_3r (:,m)=  xtrain(:,i);
+            m=m+1;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+
+figure
+hold <span class="string">on</span>
+
+scatter (X_1(1,:),X_1(2,:))
+
+scatter (X_2(1,:),X_2(2,:),<span class="string">'X'</span>)
+
+scatter (X_3(1,:),X_3(2,:), <span class="string">'d'</span>)
+
+scatter (X_1r(1,:),X_1r(2,:))
+
+scatter (X_2r(1,:),X_2r(2,:),<span class="string">'X'</span>)
+
+scatter (X_3r(1,:),X_3r(2,:), <span class="string">'d'</span>)
+
+title(<span class="string">'test data'</span>)
+axis <span class="string">equal</span>
+
+legend(<span class="string">'class1_{test}'</span>,<span class="string">'class2_{test}'</span>,<span class="string">'class3_{test}'</span>,<span class="string">'class1_{train}'</span>,<span class="string">'class2_{train}'</span>,<span class="string">'class3_{train}'</span>)
+</pre><img vspace="5" hspace="5" src="lab_01.png" alt=""> <h2>script pedido<a name="2"></a></h2><p>naive bayes classifier nao usando toolboxes do matlab para este modelo</p><pre class="codeinput"><span class="comment">% primeiro vamos descobrir qual a probabilidade da cada classe</span>
+
+
+
+
+close <span class="string">all</span>
+clear
+
+load <span class="string">data1</span>;
+
+k=1;
+j=1;
+m=1;
+
+<span class="keyword">for</span> i=1:length(ytest)
+    <span class="keyword">switch</span> ytest(i);
+        <span class="keyword">case</span> 1
+            X_1(:,k) =  xtest(:,i);
+            k=k+1;
+        <span class="keyword">case</span> 2
+            X_2(:,j) =  xtest(:,i);
+            j=j+1;
+        <span class="keyword">case</span> 3
+            X_3 (:,m)=  xtest(:,i);
+            m=m+1;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% no vectres X_i est&atilde;o os elementos de teste que pertecem &agrave; classe i</span>
+P_1 = length(X_1)/length(ytest);
+P_2 = length(X_2)/length(ytest);
+P_3 = length(X_3)/length(ytest);
+<span class="comment">% podemos verificae que s&atilde;o equiprov&aacute;veis tendo cada um dele 1/3 de</span>
+<span class="comment">% probabilidade</span>
+</pre><pre class="codeinput"><span class="comment">% o nosso objectivo &eacute;, dado um elemento ap&oacute;s aplicado ao classificador este</span>
+<span class="comment">% d&aacute; como o resultado a classe a que o elemento pertence</span>
+<span class="comment">% ou seja temos de calcula as probabilidades &agrave; posteriori e</span>
+<span class="comment">% consequentemente &agrave; priori.</span>
+</pre><p><img src="lab_eq15683142443727927553.png" alt="$$ posteriori = \frac{priori* likelihood}{evidence} $$"> likelihood  = P(C_i) probability of class i como j&aacute; vimos vai ser igual para todas as classes por isso podemos ignorar este termo a evidence tamb&eacute;m ser&aacute; igual para todos os casos logo apenas teremos de calcular a probabilidade apriori de um classe dado um elemento neste caso parece que temos</p><pre class="codeinput"><span class="comment">% para um dado elemento X = x1,x2  a sua classe ser&aacute; definida por :</span>
+<span class="comment">%max {P(Y_1|X),P(Y_2|X),P(Y_3|X)} &lt;=&gt; max {P(X|Y_1),P(X|Y_2),P(X|Y_3)}</span>
+<span class="comment">% onde P(X|Y_i) = P(x1|Y_i) * P(x2|Y_i) aqui &eacute; aplicado o naive bayes</span>
+<span class="comment">% classificator que assume que as feature s&atilde;o independentes</span>
+<span class="comment">% vamos usar distribui&ccedil;&atilde;o gaussiana por isso precisamos da variacia e</span>
+<span class="comment">% desvio padr&atilde;o</span>
+
+<span class="comment">%slide 24 http://www.cs.cmu.edu/~guestrin/Class/10701-S06/Slides/naivebayes-logisticregression.pdf</span>
+<span class="comment">%</span>
+<span class="comment">%this prob better http://cs229.stanford.edu/section/gaussians.pdf page 3</span>
+<span class="comment">%https://stats.stackexchange.com/questions/49521/how-to-find-variance-between-multidimensional-points</span>
+<span class="comment">%</span>
+
+mu_1 = [sum(X_1(1,:))/length(X_1) ,sum(X_1(2,:))/length(X_1) ];
+<span class="comment">%mu_1 = mean(X_1') n&atilde;o estou a por esta op&ccedil;&atilde;o pq no enunciado parece que</span>
+<span class="comment">%quer que facamos tudo &agrave; m&atilde;o</span>
+
+cov = (1/(length(X_1)+1)) * (X_1(1,:)-mu_1(1)) * (X_1(2,:)-mu_1(2))';
+var_1 = (1/length(X_1)) * (sum((X_1(1,:)-mu_1(1)).^2)) ;
+var_2 = (1/length(X_1)) * (sum((X_1(2,:)-mu_1(2)).^2)) ;
+
+<span class="comment">% R matrix 2 by 2 [var(x1) , cov(x1,x2) ; cov (x2,x1) , var (x2)]</span>
+sigma_1 = [var_1 ,cov ; cov, var_2];
+
+
+mu_2 = [sum(X_2(1,:))/length(X_2) ,sum(X_2(2,:))/length(X_2) ];
+cov = (1/(length(X_2)+1)) * (X_2(1,:)-mu_2(1)) * (X_2(2,:)-mu_2(2))';
+var_1 = (1/length(X_2)) * (sum((X_2(1,:)-mu_2(1)).^2)) ;
+var_2 = (1/length(X_2)) * (sum((X_2(2,:)-mu_2(2)).^2)) ;
+sigma_2 = [var_1 ,cov ; cov, var_2];
+
+
+mu_3 = [sum(X_3(1,:))/length(X_3) ,sum(X_3(2,:))/length(X_3) ];
+cov = (1/(length(X_3)+1)) * (X_3(1,:)-mu_3(1)) * (X_3(2,:)-mu_3(2))';
+var_1 = (1/length(X_3)) * (sum((X_3(1,:)-mu_3(1)).^2)) ;
+var_2 = (1/length(X_3)) * (sum((X_3(2,:)-mu_3(2)).^2)) ;
+sigma_3 = [var_1 ,cov ; cov, var_2];
+
+<span class="comment">%podemos mais ou menos ver que os valores do 1 s&atilde;o maiores mas iso &eacute; devido</span>
+<span class="comment">%ao conjunto dos 1 estar mais espalhado pelo mundo</span>
+
+<span class="comment">%func&atilde;o do matlab para multiplas dimens&otilde;es</span>
+<span class="comment">%exemplo</span>
+mvnpdf(xtest(:,1),mu_3',sigma_3);
+
+
+y_res = zeros(1,length(xtrain));
+
+<span class="keyword">for</span> i =1:length(xtrain)
+    [num ,y_res(i)] = max(mvnpdf(xteste(:,i),mu_1',sigma_1), mvnpdf(xteste(:,i),mu_2',sigma_2),mvnpdf(xteste(:,i),mu_3',sigma_3));
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput error">Undefined variable xteste.
+
+Error in lab (line 186)
+    [num ,y_res(i)] = max(mvnpdf(xteste(:,i),mu_1',sigma_1), mvnpdf(xteste(:,i),mu_2',sigma_2),mvnpdf(xteste(:,i),mu_3',sigma_3));
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% o naive bayes classifier é um classsificador baseado em probabilidades que, assume que todas as features são independetes
+% entre si, sendo possivel 
+% 
+% 
+% é altamente escalável send que o número de parametros de teste é linear com o número de feature necessarias 
+% 
+% 
+% 
+
+
+
+
+
+
+
+
+close all 
+clear
+
+load data1;
+
+k=1;
+j=1;
+m=1;
+
+for i=1:length(ytest)
+    switch ytest(i);
+        case 1
+            X_1(:,k) =  xtest(:,i);
+            k=k+1;
+        case 2
+            X_2(:,j) =  xtest(:,i);
+            j=j+1;
+        case 3
+            X_3 (:,m)=  xtest(:,i);
+            m=m+1;
+    end
+end
+
+k=1;
+j=1;
+m=1;
+
+
+for i=1:length(ytrain)
+    switch ytrain(i);
+        case 1
+            X_1r(:,k) =  xtrain(:,i);
+            k=k+1;
+        case 2
+            X_2r(:,j) =  xtrain(:,i);
+            j=j+1;
+        case 3
+            X_3r (:,m)=  xtrain(:,i);
+            m=m+1;
+    end
+end
+
+
+figure  
+hold on
+
+scatter (X_1(1,:),X_1(2,:))
+
+scatter (X_2(1,:),X_2(2,:),'X')
+
+scatter (X_3(1,:),X_3(2,:), 'd')
+
+scatter (X_1r(1,:),X_1r(2,:))
+
+scatter (X_2r(1,:),X_2r(2,:),'X')
+
+scatter (X_3r(1,:),X_3r(2,:), 'd')
+
+title('test data')
+axis equal
+
+legend('class1_{test}','class2_{test}','class3_{test}','class1_{train}','class2_{train}','class3_{train}')
+
+%% script pedido
+% naive bayes classifier
+% nao usando toolboxes do matlab para este modelo
+
+
+% primeiro vamos descobrir qual a probabilidade da cada classe 
+
+
+
+
+close all 
+clear
+
+load data1;
+
+k=1;
+j=1;
+m=1;
+
+for i=1:length(ytest)
+    switch ytest(i);
+        case 1
+            X_1(:,k) =  xtest(:,i);
+            k=k+1;
+        case 2
+            X_2(:,j) =  xtest(:,i);
+            j=j+1;
+        case 3
+            X_3 (:,m)=  xtest(:,i);
+            m=m+1;
+    end
+end
+
+% no vectres X_i estão os elementos de teste que pertecem à classe i 
+P_1 = length(X_1)/length(ytest);
+P_2 = length(X_2)/length(ytest);
+P_3 = length(X_3)/length(ytest);
+% podemos verificae que são equiprováveis tendo cada um dele 1/3 de
+% probabilidade
+%%
+
+% o nosso objectivo é, dado um elemento após aplicado ao classificador este
+% dá como o resultado a classe a que o elemento pertence
+% ou seja temos de calcula as probabilidades à posteriori e
+% consequentemente à priori.
+
+%%
+% $$ posteriori = \frac{priori* likelihood}{evidence} $$
+% likelihood  = P(C_i) probability of class i
+% como já vimos vai ser igual para todas as classes por isso podemos
+% ignorar este termo a evidence também será igual para todos os casos logo
+% apenas teremos de calcular a probabilidade apriori de um classe dado um
+% elemento
+% neste caso parece que temos 
+
+
+
+% para um dado elemento X = x1,x2  a sua classe será definida por :
+%max {P(Y_1|X),P(Y_2|X),P(Y_3|X)} <=> max {P(X|Y_1),P(X|Y_2),P(X|Y_3)}
+% onde P(X|Y_i) = P(x1|Y_i) * P(x2|Y_i) aqui é aplicado o naive bayes
+% classificator que assume que as feature são independentes
+% vamos usar distribuição gaussiana por isso precisamos da variacia e
+% desvio padrão
+
+%slide 24 http://www.cs.cmu.edu/~guestrin/Class/10701-S06/Slides/naivebayes-logisticregression.pdf
+% 
+%this prob better http://cs229.stanford.edu/section/gaussians.pdf page 3
+%https://stats.stackexchange.com/questions/49521/how-to-find-variance-between-multidimensional-points
+%
+
+mu_1 = [sum(X_1(1,:))/length(X_1) ,sum(X_1(2,:))/length(X_1) ];
+%mu_1 = mean(X_1') não estou a por esta opção pq no enunciado parece que
+%quer que facamos tudo à mão
+
+cov = (1/(length(X_1)+1)) * (X_1(1,:)-mu_1(1)) * (X_1(2,:)-mu_1(2))';
+var_1 = (1/length(X_1)) * (sum((X_1(1,:)-mu_1(1)).^2)) ;
+var_2 = (1/length(X_1)) * (sum((X_1(2,:)-mu_1(2)).^2)) ;
+
+% R matrix 2 by 2 [var(x1) , cov(x1,x2) ; cov (x2,x1) , var (x2)] 
+sigma_1 = [var_1 ,cov ; cov, var_2];
+
+
+mu_2 = [sum(X_2(1,:))/length(X_2) ,sum(X_2(2,:))/length(X_2) ];
+cov = (1/(length(X_2)+1)) * (X_2(1,:)-mu_2(1)) * (X_2(2,:)-mu_2(2))';
+var_1 = (1/length(X_2)) * (sum((X_2(1,:)-mu_2(1)).^2)) ;
+var_2 = (1/length(X_2)) * (sum((X_2(2,:)-mu_2(2)).^2)) ;
+sigma_2 = [var_1 ,cov ; cov, var_2];
+
+
+mu_3 = [sum(X_3(1,:))/length(X_3) ,sum(X_3(2,:))/length(X_3) ];
+cov = (1/(length(X_3)+1)) * (X_3(1,:)-mu_3(1)) * (X_3(2,:)-mu_3(2))';
+var_1 = (1/length(X_3)) * (sum((X_3(1,:)-mu_3(1)).^2)) ;
+var_2 = (1/length(X_3)) * (sum((X_3(2,:)-mu_3(2)).^2)) ;
+sigma_3 = [var_1 ,cov ; cov, var_2];
+
+%podemos mais ou menos ver que os valores do 1 são maiores mas iso é devido
+%ao conjunto dos 1 estar mais espalhado pelo mundo
+
+%funcão do matlab para multiplas dimensões
+%exemplo
+mvnpdf(xtest(:,1),mu_3',sigma_3);
+
+
+y_res = zeros(1,length(xtrain));
+
+for i =1:length(xtrain)
+    [num ,y_res(i)] = max(mvnpdf(xteste(:,i),mu_1',sigma_1), mvnpdf(xteste(:,i),mu_2',sigma_2),mvnpdf(xteste(:,i),mu_3',sigma_3));
+
+end
+
+
+##### SOURCE END #####
+--></body></html>
