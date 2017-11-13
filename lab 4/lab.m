@@ -186,7 +186,8 @@ for i =1:length(xtrain)
     [num , y_res(i)] = max([mvnpdf(xtest(:,i),mu_1',sigma_1) , mvnpdf(xtest(:,i),mu_2',sigma_2) , mvnpdf(xtest(:,i),mu_3',sigma_3)]);
 end
 
+%não tenho a certeza se a equação funcionará assim
 
-erro = sum(y_res-ytest)/length(xtrain) * 100
+erro = sum(abs(y_res-ytest)/length(xtrain)) * 100
 
 
