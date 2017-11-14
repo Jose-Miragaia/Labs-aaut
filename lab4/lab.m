@@ -75,7 +75,7 @@ scatter (X_2r(1,:),X_2r(2,:),'X','blue')
 scatter (X_3r(1,:),X_3r(2,:),'X', 'm')
 
 title('test data')
-axis equal
+axis  equal
 
 legend('class1_{test}','class2_{test}','class3_{test}','class1_{train}','class2_{train}','class3_{train}')
 
