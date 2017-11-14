@@ -55,7 +55,7 @@
 			% Add here any initialization code that is to be performed once for each language, before the loop on trigrams.
 			%
             %gets probability for a language and logs it
-              Prob_lang(languageindex) = log(double(total_counts(languageindex)+counts{languageindex}.Count))-log((sum(total_counts)+60^3));
+              Prob_lang(languageindex) = log(double(total_counts(languageindex)+60^3))-log((sum(total_counts)+3*60^3));
 			% This is Code Section 1
 			% ***************************************************************************************************************
 			
@@ -84,7 +84,7 @@
                 %its added +1 to every trigram to use LaPlacian Smoothing
                 %this obtains probability of trigram given the language and
                 %logs it
-                 appearances(trigramindex) = log(trigramcount+1) - log(double(total_counts(languageindex)+(total_counts(languageindex)+counts{languageindex}.Count)));
+                 appearances(trigramindex) = log(trigramcount+1) - log(double(total_counts(languageindex)+(total_counts(languageindex)+60^3)));
 				% This is Code Section 2
 				% *****************************************************************
 				
