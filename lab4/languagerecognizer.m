@@ -53,14 +53,14 @@
 				
 			% ***************************************************************************************************************
 			% Add here any initialization code that is to be performed once for each language, before the loop on trigrams.
-			%
-			% This is Code Section 1
-			% ***************************************************************************************************************
-			Prob_lang(languageindex) = total_counts(languageindex)/(sum(total_counts));
+						
+            Prob_lang(languageindex) = (total_counts(languageindex)+counts{languageindex}.Count)/(sum(total_counts)+60^3);
             
             appearances = zeros(1,numel(text)-2);
-           
-            
+            additionalcount=0;
+            % This is Code Section 1
+			% ***************************************************************************************************************
+			
             
 			for trigramindex = 1:numel(text)-2;					% Loop through all the trigrams of the input text
 				
@@ -73,11 +73,16 @@
                 end
                 
                 
+                       
                 
-                appearances(trigramindex) = trigramcount/total_counts(languageindex);
+                
+               
 				% *****************************************************************
 				% Add here any code that is to be executed once for each trigram.
-				%
+				
+                 appearances(trigramindex) = (trigramcount+1)/(total_counts(languageindex)+counts{languageindex}.Count);
+                
+                
 				% This is Code Section 2
 				% *****************************************************************
 				
@@ -87,13 +92,13 @@
 			% Add here any code that is to be executed after all trigrams are processed, for the current language.
 			% It should end with an instruction that stores the language's score in the array 'scores', in the following form:
 			%
-			% scores(languageindex) = <expression>
+			 scores(languageindex) = log(prod(appearances) *Prob_lang(languageindex));
 			%
 			% This is Code Section 3
 			% *******************************************************************************************************************
 			
-           % scores(languageindex) = sum(appearances) + log(Prob_lang(languageindex));
-           scores(languageindex) = log(prod(appearances) *Prob_lang(languageindex));
+        
+          
             
             
 		end			% The loop on languages ends here
