@@ -243,14 +243,24 @@ end
 mu1=mean(X_1r');
 mu2=mean(X_2r');
 mu3=mean(X_3r');
-sig1=sqrt( var(X_1r'));
-sig2=sqrt( var(X_2r'));
-sig3=sqrt( var(X_3r'));
+sig1=std(X_1r');
+sig2=std(X_2r');
+sig3=std(X_3r');
+[ p1, p2, p3] = deal( 1/3 );
 
-%agora és testar para cada ponto do conjunto de treino qual a pdf com maior
-x = [-3:.1:3];
-normpdf(x);
-%norm1 = normpdf(x,mu1,sig1);
-%norm2 = normpdf(x,mu2,sig2);
-%norm3 = normpdf(x,mu3',sig3');
+p1post=p1*normpdf(xtest(1,1),mu1(1),sig1(1))*normpdf(xtest(2,1),mu1(2),sig1(2));
 
+for i =1:length(xtest)
+    
+    p1post=p1*normpdf(xtest(1,1),mu1(1),sig1(1))*normpdf(xtest(2,1),mu1(2),sig1(2));
+    p2post=p1*normpdf(xtest(1,1),mu1(1),sig1(1))*normpdf(xtest(2,1),mu1(2),sig1(2));
+    p3post=p1*normpdf(xtest(1,1),mu1(1),sig1(1))*normpdf(xtest(2,1),mu1(2),sig1(2));
+    [num , y_res(i)] = max([mvnpdf(xtest(1,i),mu_1',sigma_1) , mvnpdf(xtest(2,i),mu_2',sigma_2) , mvnpdf(xtest(:,i),mu_3',sigma_3)]);
+end
+
+
+y_res = zeros(1,length(xtest));
+
+for i =1:length(xtest)
+    [num , y_res(i)] = max([mvnpdf(xtest(:,i),mu_1',sigma_1) , mvnpdf(xtest(:,i),mu_2',sigma_2) , mvnpdf(xtest(:,i),mu_3',sigma_3)]);
+end

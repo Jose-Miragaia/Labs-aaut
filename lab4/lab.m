@@ -243,15 +243,20 @@ end
 mu1=mean(X_1r');
 mu2=mean(X_2r');
 mu3=mean(X_3r');
-sig1=sqrt( var(X_1r'));
-sig2=sqrt( var(X_2r'));
-sig3=sqrt( var(X_3r'));
+sig1=std(X_1r');
+sig2=std(X_2r');
+sig3=std(X_3r');
+[ p1, p2, p3] = deal( 1/3 );
 
-%agora és testar para cada ponto do conjunto de treino qual a pdf com maior
-x = [-3:.1:3];
-ola =normpdf([-1 2 4 4],mu1,sig1);
-%norm1 = normpdf(x,mu1,sig1);
-%norm2 = normpdf(x,mu2,sig2);
-%norm3 = normpdf(x,mu3',sig3');
 
-%plot(x,normpdf(x,mu1(1),sig1(1)));
+
+for i =1:length(xtest)
+    
+    p1post=p1*normpdf(xtest(1,i),mu1(1),sig1(1))*normpdf(xtest(2,i),mu1(2),sig1(2));
+    p2post=p2*normpdf(xtest(1,i),mu2(1),sig2(1))*normpdf(xtest(2,i),mu2(2),sig2(2));
+    p3post=p3*normpdf(xtest(1,i),mu3(1),sig3(1))*normpdf(xtest(2,i),mu3(2),sig3(2));
+
+    [num , y_res(i)] = max([p1post , p2post , p3post]);
+end
+
+erro_percentual = nnz(y_res-ytest)/length(xtrain) * 100
