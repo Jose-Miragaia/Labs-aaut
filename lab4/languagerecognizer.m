@@ -84,7 +84,7 @@
                 %its added +1 to every trigram to use LaPlacian Smoothing
                 %this obtains probability of trigram given the language and
                 %logs it
-                 appearances(trigramindex) = log(trigramcount+1) - log(double(total_counts(languageindex)+(total_counts(languageindex)+counts{1}.Count)));
+                 appearances(trigramindex) = log(trigramcount+1) - log(double(total_counts(languageindex)+(total_counts(languageindex)+counts{languageindex}.Count)));
 				% This is Code Section 2
 				% *****************************************************************
 				
