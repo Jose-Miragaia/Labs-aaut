@@ -1,7 +1,7 @@
 close all
 %delete all miragaias
 clear all
-clc
+
 
 load data1.mat
 

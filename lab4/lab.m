@@ -98,24 +98,24 @@ k=1;
 j=1;
 m=1;
 
-for i=1:length(ytest)
-    switch ytest(i);
+for i=1:length(ytrain)
+    switch ytrain(i);
         case 1
-            X_1(:,k) =  xtest(:,i);
+            X_1(:,k) =  xtrain(:,i);
             k=k+1;
         case 2
-            X_2(:,j) =  xtest(:,i);
+            X_2(:,j) =  xtrain(:,i);
             j=j+1;
         case 3
-            X_3 (:,m)=  xtest(:,i);
+            X_3 (:,m)=  xtrain(:,i);
             m=m+1;
     end
 end
 
 % no vectres X_i estão os elementos de teste que pertecem à classe i 
-P_1 = length(X_1)/length(ytest);
-P_2 = length(X_2)/length(ytest);
-P_3 = length(X_3)/length(ytest);
+P_1 = length(X_1)/length(ytrain);
+P_2 = length(X_2)/length(ytrain);
+P_3 = length(X_3)/length(ytrain);
 % podemos verificae que são equiprováveis tendo cada um dele 1/3 de
 % probabilidade
 %%
@@ -158,108 +158,112 @@ var_1 = (1/length(X_1)) * (sum((X_1(1,:)-mu_1(1)).^2)) ;
 var_2 = (1/length(X_1)) * (sum((X_1(2,:)-mu_1(2)).^2)) ;
 
 % R matrix 2 by 2 [var(x1) , cov(x1,x2) ; cov (x2,x1) , var (x2)] 
-sigma_1 = [var_1 ,cov ; cov, var_2];
+sigma_1 = [var_1 ,0 ; 0, var_2];
 
 
 mu_2 = [sum(X_2(1,:))/length(X_2) ,sum(X_2(2,:))/length(X_2) ];
 cov = (1/(length(X_2)+1)) * (X_2(1,:)-mu_2(1)) * (X_2(2,:)-mu_2(2))';
 var_1 = (1/length(X_2)) * (sum((X_2(1,:)-mu_2(1)).^2)) ;
 var_2 = (1/length(X_2)) * (sum((X_2(2,:)-mu_2(2)).^2)) ;
-sigma_2 = [var_1 ,cov ; cov, var_2];
+sigma_2 = [var_1 ,0 ; 0, var_2];
 
 
 mu_3 = [sum(X_3(1,:))/length(X_3) ,sum(X_3(2,:))/length(X_3) ];
 cov = (1/(length(X_3)+1)) * (X_3(1,:)-mu_3(1)) * (X_3(2,:)-mu_3(2))';
 var_1 = (1/length(X_3)) * (sum((X_3(1,:)-mu_3(1)).^2)) ;
 var_2 = (1/length(X_3)) * (sum((X_3(2,:)-mu_3(2)).^2)) ;
-sigma_3 = [var_1 ,cov ; cov, var_2];
+sigma_3 = [var_1 ,0 ; 0, var_2];
 
 %podemos mais ou menos ver que os valores do 1 são maiores mas iso é devido
 %ao conjunto dos 1 estar mais espalhado pelo mundo
 
-%funcão do matlab para multiplas dimensões
-%exemplo
-mvnpdf(xtest(:,1),mu_3',sigma_3);
 
 
-y_res = zeros(1,length(xtrain));
 
-for i =1:length(xtrain)
+y_res = zeros(1,length(xtest));
+
+for i =1:length(xtest)
     [num , y_res(i)] = max([mvnpdf(xtest(:,i),mu_1',sigma_1) , mvnpdf(xtest(:,i),mu_2',sigma_2) , mvnpdf(xtest(:,i),mu_3',sigma_3)]);
 end
 
 %não tenho a certeza se a equação funcionará assim
-
-erro = sum(abs(y_res-ytest)/length(xtrain)) * 100
-
-%%ESTA MERDA TA CONFUSA TAS A USAR O X TEST PARA TREINAR WTF BOY
-
-close all 
-clear
-
-load data1;
-
-k=1;
-j=1;
-m=1;
-
-for i=1:length(ytest)
-    switch ytest(i);
-        case 1
-            X_1(:,k) =  xtest(:,i);
-            k=k+1;
-        case 2
-            X_2(:,j) =  xtest(:,i);
-            j=j+1;
-        case 3
-            X_3 (:,m)=  xtest(:,i);
-            m=m+1;
-    end
-end
-
-k=1;
-j=1;
-m=1;
+% 
+% disp('Acertou')
+% 
+% sum(abs(y_res-ytest))
+% disp('de 150')
 
 
-for i=1:length(ytrain)
-    switch ytrain(i);
-        case 1
-            X_1r(:,k) =  xtrain(:,i);
-            k=k+1;
-        case 2
-            X_2r(:,j) =  xtrain(:,i);
-            j=j+1;
-        case 3
-            X_3r (:,m)=  xtrain(:,i);
-            m=m+1;
-    end
-end
+erro_percentual = nnz(y_res-ytest)/length(xtrain) * 100
 
-mu1=mean(X_1r');
-mu2=mean(X_2r');
-mu3=mean(X_3r');
-sig1=sqrt( var(X_1r'));
-sig2=sqrt( var(X_2r'));
-sig3=sqrt( var(X_3r'));
-
-%agora és testar para cada ponto do conjunto de treino qual a pdf com maior
-x = [-3:.1:3];
-norm = normpdf(x,0,1);
-x1 = -3:.2:3; x2 = -3:.2:3;
-[X1,X2] = meshgrid(x1,x2);
-F = mvnpdf([X1(:) X2(:)],mu1,sig1);
-F = reshape(F,length(x2),length(x1));
-surf(x1,x2,F);
-hold on
-F = mvnpdf([X1(:) X2(:)],mu2,sig2);
-F = reshape(F,length(x2),length(x1));
-surf(x1,x2,F);
-F = mvnpdf([X1(:) X2(:)],mu3,sig3);
-F = reshape(F,length(x2),length(x1));
-surf(x1,x2,F);
-
-
-caxis([min(F(:))-.5*range(F(:)),max(F(:))]);
-axis([-3 3 -3 3 0 .4])
-xlabel('x1'); ylabel('x2'); zlabel('Probability Density');
+%% ESTA MERDA TA CONFUSA TAS A USAR O X TEST PARA TREINAR WTF BOY
+% 
+% close all 
+% clear
+% 
+% load data1;
+% 
+% k=1;
+% j=1;
+% m=1;
+% 
+% for i=1:length(ytest)
+%     switch ytest(i);
+%         case 1
+%             X_1(:,k) =  xtest(:,i);
+%             k=k+1;
+%         case 2
+%             X_2(:,j) =  xtest(:,i);
+%             j=j+1;
+%         case 3
+%             X_3 (:,m)=  xtest(:,i);
+%             m=m+1;
+%     end
+% end
+% 
+% k=1;
+% j=1;
+% m=1;
+% 
+% 
+% for i=1:length(ytrain)
+%     switch ytrain(i);
+%         case 1
+%             X_1r(:,k) =  xtrain(:,i);
+%             k=k+1;
+%         case 2
+%             X_2r(:,j) =  xtrain(:,i);
+%             j=j+1;
+%         case 3
+%             X_3r (:,m)=  xtrain(:,i);
+%             m=m+1;
+%     end
+% end
+% 
+% mu1=mean(X_1r');
+% mu2=mean(X_2r');
+% mu3=mean(X_3r');
+% sig1=sqrt( var(X_1r'));
+% sig2=sqrt( var(X_2r'));
+% sig3=sqrt( var(X_3r'));
+% 
+% %agora és testar para cada ponto do conjunto de treino qual a pdf com maior
+% x = [-3:.1:3];
+% norm = normpdf(x,0,1);
+% x1 = -5:.2:5; x2 = -5:.2:5;
+% [X1,X2] = meshgrid(x1,x2);
+% F = mvnpdf([X1(:) X2(:)],mu1,sig1);
+% F = reshape(F,length(x2),length(x1));
+% surf(x1,x2,F);
+% hold on
+% F = mvnpdf([X1(:) X2(:)],mu2,sig2);
+% F = reshape(F,length(x2),length(x1));
+% surf(x1,x2,F);
+% F = mvnpdf([X1(:) X2(:)],mu3,sig3);
+% F = reshape(F,length(x2),length(x1));
+% surf(x1,x2,F);
+% 
+% 
+% caxis([min(F(:))-.5*range(F(:)),max(F(:))]);
+% axis([-5 5 -5 5 0 .4])
+% xlabel('x1'); ylabel('x2'); zlabel('Probability Density');

@@ -39,6 +39,7 @@
 	% *** Second part: This is a loop which repeatedly asks for text and then classifies it
 
 	fprintf('\n\nType a line of text to be classified. To quit, type "quit"\n\n')
+    
 	
 	while 1			% Main loop: Read the input text and then classify it
 		
@@ -55,10 +56,11 @@
 			%
 			% This is Code Section 1
 			% ***************************************************************************************************************
-			score{languageindex} = 0
+			Prob_lang(languageindex) = total_counts(languageindex)/(sum(total_counts));
             
+            appearances = zeros(1,numel(text)-2);
+           
             
-            appearances = zeros(1,numl(text)-2);
             
 			for trigramindex = 1:numel(text)-2;					% Loop through all the trigrams of the input text
 				
@@ -69,8 +71,10 @@
 				else
 					trigramcount = 0;
                 end
-
-                appearances(trigramindex) = trigramcount;
+                
+                
+                
+                appearances(trigramindex) = trigramcount/total_counts(languageindex);
 				% *****************************************************************
 				% Add here any code that is to be executed once for each trigram.
 				%
@@ -88,6 +92,10 @@
 			% This is Code Section 3
 			% *******************************************************************************************************************
 			
+           % scores(languageindex) = sum(appearances) + log(Prob_lang(languageindex));
+           scores(languageindex) = log(prod(appearances) *Prob_lang(languageindex));
+            
+            
 		end			% The loop on languages ends here
 		
 		% Output the results
