@@ -57,7 +57,7 @@
 			% This is Code Section 1
 			% ***************************************************************************************************************
 			
-            Prob_lang(languageindex) = log(double(total_counts(languageindex)+counts{languageindex}.Count))-log((sum(total_counts)+60^3));
+            Prob_lang(languageindex) = (total_counts(languageindex)+counts{1}.Count)/(sum(total_counts)+60^3);
             
             appearances = zeros(1,numel(text)-2);
             additionalcount=0;
@@ -80,7 +80,7 @@
       
                 
                 
-                appearances(trigramindex) = log(trigramcount+1) - log(double(total_counts(languageindex)+(total_counts(languageindex)+counts{1}.Count)));
+                appearances(trigramindex) = (trigramcount+1)/(total_counts(languageindex)+60^3);
 				% *****************************************************************
 				% Add here any code that is to be executed once for each trigram.
 				%
@@ -98,8 +98,8 @@
 			% This is Code Section 3
 			% *******************************************************************************************************************
 			
-            scores(languageindex) = sum(appearances) + (Prob_lang(languageindex));
-           %scores(languageindex) = log(double(prod(appearances) *Prob_lang(languageindex)));
+           % scores(languageindex) = sum(appearances) + log(Prob_lang(languageindex));
+           scores(languageindex) = log(prod(appearances) *Prob_lang(languageindex));
             
             
 		end			% The loop on languages ends here

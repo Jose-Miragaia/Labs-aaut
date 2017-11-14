@@ -249,9 +249,8 @@ sig3=sqrt( var(X_3r'));
 
 %agora és testar para cada ponto do conjunto de treino qual a pdf com maior
 x = [-3:.1:3];
-ola =normpdf([-1 2 4 4],mu1,sig1);
+normpdf(x);
 %norm1 = normpdf(x,mu1,sig1);
 %norm2 = normpdf(x,mu2,sig2);
 %norm3 = normpdf(x,mu3',sig3');
 
-%plot(x,normpdf(x,mu1(1),sig1(1)));
