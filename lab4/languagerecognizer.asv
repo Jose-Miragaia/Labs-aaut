@@ -57,7 +57,7 @@
 			% This is Code Section 1
 			% ***************************************************************************************************************
 			
-            Prob_lang(languageindex) = (total_counts(languageindex)+counts{1}.Count)/(sum(total_counts)+60^3);
+            Prob_lang(languageindex) = log(double(total_counts(languageindex)+counts{languageindex}.Count))-log((sum(total_counts)+60^3));
             
             appearances = zeros(1,numel(text)-2);
             additionalcount=0;
@@ -72,18 +72,17 @@
 				else
 					trigramcount = 0;
                 end
+                             
                 
-                
-                 additionalcount=additionalcount+1;
-                %adiciona 1 a todos os trigramas de modo a fazer LaPlacian
-                %Smoothing
-      
-                
-                
-                appearances(trigramindex) = (trigramcount+1)/(total_counts(languageindex)+60^3);
+               
 				% *****************************************************************
 				% Add here any code that is to be executed once for each trigram.
 				%
+                %appearances(trigramindex) =log(trigocurrences/totallanguageocurrences)
+                %its added +1 to every trigram to use LaPlacian Smoothing
+                %this obtains probability of trigram given the language and
+                %logs it
+                 appearances(trigramindex) = log(trigramcount+1) - log(double(total_counts(languageindex)+(total_counts(languageindex)+counts{1}.Count)));
 				% This is Code Section 2
 				% *****************************************************************
 				
@@ -93,13 +92,15 @@
 			% Add here any code that is to be executed after all trigrams are processed, for the current language.
 			% It should end with an instruction that stores the language's score in the array 'scores', in the following form:
 			%
-			% scores(languageindex) = <expression>
+            %its summed to logarithms of P(language) and P(tri1|language)
+            %and  P(tri2|language)
+			scores(languageindex) = sum(appearances) + (Prob_lang(languageindex));
+           %scores(languageindex) = log(double(prod(appearances) *Prob_lang(languageindex)));
 			%
 			% This is Code Section 3
 			% *******************************************************************************************************************
 			
-           % scores(languageindex) = sum(appearances) + log(Prob_lang(languageindex));
-           scores(languageindex) = log(prod(appearances) *Prob_lang(languageindex));
+            
             
             
 		end			% The loop on languages ends here
