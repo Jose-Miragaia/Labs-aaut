@@ -1,0 +1,18 @@
+VALORES
+curso...	pt	-163.73796	0.66073591
+el mercado...	es	-194.5119	19.370991
+loja		fr	-111.94493	3.6247476
+palvra é	en	-197.64411	0.31793626
+biatch		en	-1327.7731	260.87046
+
+CODIGO
+
+
+1.
+Prob_lang(languageindex) = log(double(total_counts(languageindex)+60^3))-log((sum(total_counts)+3*60^3));
+
+2.
+ appearances(trigramindex) = log(trigramcount+1) - log(double(total_counts(languageindex)+60^3));
+
+3.
+scores(languageindex) = sum(appearances) + (Prob_lang(languageindex));
