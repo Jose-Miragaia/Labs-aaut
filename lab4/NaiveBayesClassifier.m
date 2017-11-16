@@ -264,7 +264,7 @@ mu2=mean(X_2r');
 mu3=mean(X_3r');
 
 %calculates the standard deviation for each class and feature (PERGUNTAR SE E MSM PRECISO POR CALCULAR A VARIANCIA E POR VAR n em vez de n-1)
-sig1=sqrt(var(X_1r')*(size(X_1r',1)-1)/size(X_1r',1));
+sig1=sqrt(var(X_1r')*(size(X_1r',1)-1)/size(X_1r',1));% as operações descritas servem para que no calculo da variancia se divida por N em vez do habitual n-1
 sig2=sqrt(var(X_2r')*(size(X_2r',1)-1)/size(X_2r',1));
 sig3=sqrt(var(X_3r')*(size(X_3r',1)-1)/size(X_3r',1));
 
@@ -280,7 +280,7 @@ for i =1:length(xtest)
     
     %calculates the posterior probability for each class ignoring the scale factor
    
-    %Pposterior1=P('1')*P(feature1|'1')*P(feature2|'1');
+    %Posterior1=P('1')*P(feature1|'1')*P(feature2|'1');
     p1post=p1*normpdf(xtest(1,i),mu1(1),sig1(1))*normpdf(xtest(2,i),mu1(2),sig1(2));
     p2post=p2*normpdf(xtest(1,i),mu2(1),sig2(1))*normpdf(xtest(2,i),mu2(2),sig2(2));
     p3post=p3*normpdf(xtest(1,i),mu3(1),sig3(1))*normpdf(xtest(2,i),mu3(2),sig3(2));
