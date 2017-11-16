@@ -100,14 +100,14 @@ ylabel('class predicted')
 
 
 
-% figure(f)
-% %usar para as conclusoes apagar depois
-% for i=1:length(xtest)
-%     if(y_res(i)-ytest(i)~=0)
-%       scatter (xtest(1,i),xtest(2,i),'O','fill','black')
-%       hold on
-%     end
-% end
+figure(f)
+%usar para as conclusoes apagar depois
+for i=1:length(xtest)
+    if(y_res(i)-ytest(i)~=0)
+      scatter (xtest(1,i),xtest(2,i),'O','fill','black')
+      hold on
+    end
+end
 
 %calculates error
 erro_percentual = nnz(y_res-ytest)/length(xtrain) * 100
