@@ -83,7 +83,7 @@ load spiral
 % this values was changed between iterations
 
 for i=1:200
-sigma = 0.01*i;
+sigma = 0.1*i;
 
 SVM = svmtrain(X,Y,'kernel_function','rbf','rbf_sigma',sigma,'Method','QP','boxconstraint',10^4);
 
@@ -195,7 +195,7 @@ close all
 load Chess33n
 sigma = 1;
 stuff = 1;
-for stuff = 3:-1:-3
+for stuff = 10:-1:-10
 box = 10^stuff;
 stuff
 
