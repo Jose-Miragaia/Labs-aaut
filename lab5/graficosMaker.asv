@@ -1,0 +1,6 @@
+Xmais=[1,1];
+Xmenos=[-1 ,-1 ;-1,1;1,-1];
+
+
+scatter(Xmais(:,1),Xmais(:,2));
+scatter(Xmais(:,1),Xmais(:,2));
