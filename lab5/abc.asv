@@ -184,8 +184,9 @@ Nr_suport_vectors = length(SVM.SupportVectors)
 
 %erro 0 nr = 17 
 % em vez de fazer uma bolsa individual para cada um dos cluster de dados
-% pertencentes à mesma classe criou bubbles em volta de um dos outleirs
-
+% pertencentes à mesma classe 
+% criou bubbles em volta de um dos outleirs
+% sry for not writting more not rly in the mood
 
 
 
@@ -195,12 +196,12 @@ close all
 load Chess33n
 sigma = 1;
 stuff = 1;
-for stuff = 3:-1:-3
+for stuff = -5:10
 box = 10^stuff;
 stuff
 
 SVM = svmtrain(X,Y,'kernel_function','rbf','rbf_sigma',sigma,'ShowPlot',true,'Method','QP','boxconstraint',box);
-
+pause
 RESULT = svmclassify(SVM,X);
 
 % erro em percentagem , como existem 100 elementos o resultado já vem em
@@ -209,7 +210,7 @@ RESULT = svmclassify(SVM,X);
 % matriz vamos obeter os que são zeros, que correspondem a erros de
 % classificação
 erro_per = nnz((RESULT - Y))
-pause()
+
 % quantos vectores de support são utilizados:
 Nr_suport_vectors = length(SVM.SupportVectors)
 end
