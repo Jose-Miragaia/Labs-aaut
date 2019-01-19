@@ -9,3 +9,8 @@
 4. Naive Bayes Classifier for language identification
 
 5. Support Vector Machine for data separation
+
+
+Made with
+
+[@JoaoRamiro](https://github.com/BazingoW)
