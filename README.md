@@ -13,4 +13,4 @@
 
 Made with
 
-[@JoaoRamiro](https://github.com/BazingoW)
+[@JoaoRamiro](https://github.com/DonHaul)
